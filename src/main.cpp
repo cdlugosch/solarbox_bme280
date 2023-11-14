@@ -49,7 +49,7 @@ float battery_voltage  = 0.0;
 String battery_status ="Ok";
 char mqtt_message[300];
 
-//RTC_DATA_ATTR int bootcount = 0;
+//RTC_DATA_ATTR int bootcount = 0; 
 
 bool bme_status;
 
