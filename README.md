@@ -2,7 +2,7 @@
 
 ESP will publish all values via mqtt json message
 
-Normal loop/deepsleep time is 5 minutes - will increase in case of low battery voltage
+Default loop/deepsleep time is 5 minutes - will increase in case of low battery voltage
 
 #### Polycrystalline Solar Panel:
 6V 1W -  110x60 166mA 
