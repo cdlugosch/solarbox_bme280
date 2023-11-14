@@ -1,6 +1,6 @@
 // WiFi 
-const char* ssid            = "Renoir";
-const char* WiFi_password   = "oyn4Feb9Om3yOb";
+const char* ssid            = "******";
+const char* WiFi_password   = "******";
 
 // MQTT 
 const char* mqttServer      = "10.120.40.25";
