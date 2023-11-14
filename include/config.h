@@ -3,7 +3,7 @@ const char* ssid            = "******";
 const char* WiFi_password   = "******";
 
 // MQTT 
-const char* mqttServer      = "10.120.40.25";
+const char* mqttServer      = "1.2.3.4";
 const int mqttPort          = 1883;
 const char* mqtt_user       = "";
 const char* mqtt_password   = "";
