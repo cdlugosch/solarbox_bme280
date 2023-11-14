@@ -49,7 +49,7 @@ float battery_voltage  = 0.0;
 String battery_status ="Ok";
 char mqtt_message[300];
 
-RTC_DATA_ATTR int bootcount = 0;
+//RTC_DATA_ATTR int bootcount = 0;
 
 bool bme_status;
 
@@ -67,7 +67,7 @@ void setup()
 
   //Serial.end();
   //Serial.begin(115200);
-  bootcount ++;
+  //bootcount ++;
 
   delay(100);
 //  Serial.println("Waking Up");
@@ -102,13 +102,9 @@ void setup()
   a = bme.readAltitude(SEALEVELPRESSURE_HPA);
   h = bme.readHumidity();
 
+  /* debug purposes only */
   printValues();
   
-  
-  /*client.publish( "esp/box01/temperature", temperatureCString );
-  client.publish( "esp/box01/pressure", pressureString );
-'*/
-
 
     /* Do not use sprintf as it may crash due to buffer overflow in case you ma strings and floats */
     snprintf(mqtt_message, sizeof(mqtt_message), "{"
