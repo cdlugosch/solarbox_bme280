@@ -1,5 +1,11 @@
-//#include <Arduino.h>
 #include "myEspLib.h"
+
+//#define DEBUG
+#ifdef DEBUG
+  #define LOG(x) if (Serial) Serial.println(x)
+#else
+  #define LOG(x)
+#endif
 
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -22,26 +28,10 @@ float p, t, a, h;
 
 
 void printValues() {
-  /*
-    Serial.print("Temperature = ");
-    Serial.print(bme.readTemperature());
-    Serial.println(" °C");
-
-    Serial.print("Pressure = ");
-
-    Serial.print(bme.readPressure() / 100.0F);
-    Serial.println(" hPa");
-
-    Serial.print("Approx. Altitude = ");
-    Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
-    Serial.println(" m");
-
-    Serial.print("Humidity = ");
-    Serial.print(bme.readHumidity());
-    Serial.println(" %");
-
-    Serial.println();
-    */
+  LOG("Temperature = " + String(t) + " °C");
+  LOG("Pressure = " + String(p) + " hPa");
+  LOG("Approx. Altitude = " + String(a) + " m");
+  LOG("Humidity = " + String(h) + " %");
 }
 
 float battery_voltage  = 0.0;
@@ -65,28 +55,27 @@ void setup()
   //slow down esp to save battery
   setCpuFrequencyMhz(80);
 
-  //Serial.end();
-  //Serial.begin(115200);
-  //bootcount ++;
-
   delay(100);
-//  Serial.println("Waking Up");
+  Serial.begin();
+  LOG("Waking Up");
 
 
 
-  bme_status = bme.begin(0x76); 
+  bme_status = bme.begin(0x76);
+  if (!bme_status) {
+    LOG("BME280 sensor not found at 0x76 - check wiring!");
+  }
 
 
 
   /*####################################################*/
   /* Voltage Monitor */
-  for(int i = 0; i < 16; i++) {
-    battery_voltage_mv += analogReadMilliVolts(analog_voltage_pin); // ADC with correction - read multiple times  
-    delay(200);  
+  for(int i = 0; i < 4; i++) {
+    battery_voltage_mv += analogReadMilliVolts(analog_voltage_pin); // ADC with correction - read multiple times
+    delay(200);
   }
-  battery_voltage = (battery_voltage_mv*2/16)/1000.0;     // voltage divider halfs values attenuation ratio 1/2, mV --> V
-  //  Serial.print("analogReadMilliVolts : ");
-  //  Serial.println(battery_voltage, 3);    
+  battery_voltage = (battery_voltage_mv*2/4)/1000.0;     // voltage divider halfs values attenuation ratio 1/2, mV --> V
+  LOG("Battery voltage: " + String(battery_voltage, 3) + " V");
   
 
   if(battery_voltage < 3.4 && battery_voltage > 0){
@@ -117,7 +106,7 @@ void setup()
       "\"battery_status\":\"%s\""
       "}\n",
     t, p, a, h, time_to_sleep/uS_TO_S_FACTOR, battery_voltage, battery_status.c_str());
-    //Serial.println(mqtt_message);
+  LOG(mqtt_message);
 
   /*power down bme sensor */
   digitalWrite(sensor_power_pin, LOW); 
@@ -146,12 +135,10 @@ void setup()
   delay(2000);
 
   disconnectNetwork();  //disconnect mqtt & Wifi
-  //Serial.println("Done - activating deepsleep mode");
+  LOG("Done - activating deepsleep mode");
 
   esp_sleep_enable_timer_wakeup(time_to_sleep);
-  //Serial.flush(); // wait that all serial information is send
-  //Serial.end();   //stop serial connection
-  esp_deep_sleep_start(); 
+  esp_deep_sleep_start();
 
 
 

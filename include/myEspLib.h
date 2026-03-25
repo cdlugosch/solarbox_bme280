@@ -104,23 +104,8 @@ boolean connectNetwork(){
     }   */
 
     if(WiFi.status() == WL_CONNECTED){
-      //Serial.println("Connecting to MQTT...");    
       mqttClient.setServer(mqttServer, mqttPort);
-      mqttClient.connect(mqtt_ClientName, NULL, NULL );
-      
-      start_seconds = millis();
-      while ((!mqttClient.connected()) && (start_seconds+5000 > millis())) {
-          //Serial.print(".");
-      }
-
-      if (mqttClient.connect(mqtt_ClientName, NULL, NULL )) {
-        //Serial.println("MQTT connected");  
-        return true;
-      } else {
-      //  Serial.print("MQTT failed with state ");
-      //  Serial.println(mqttClient.state());
-        return false;
-      }
+      return mqttClient.connect(mqtt_ClientName, NULL, NULL);
     }
 
     connect_attempt_count +=1;
