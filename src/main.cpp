@@ -142,7 +142,7 @@ void setup()
   /*####################################################*/
   /* GO DEEP SLEEP */
   //Wait a little bit to make sure publish is finished
-  delay(2000);
+  delay(4000);
 
   disconnectNetwork();  //disconnect mqtt & Wifi
   LOG("Done - activating deepsleep mode");
