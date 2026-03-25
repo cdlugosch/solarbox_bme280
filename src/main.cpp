@@ -20,7 +20,7 @@ Adafruit_BME280 bme; // I2C
 
 
 uint32_t battery_voltage_mv = 0;
-uint64_t time_to_sleep = 300;   /* Time ESP32 will go to sleep (in seconds) */  
+uint64_t time_to_sleep = 300;   /* Time ESP32 will go to sleep (in seconds) - set dynamically based on battery voltage */
 
 
 float p, t, a, h;
@@ -78,9 +78,19 @@ void setup()
   LOG("Battery voltage: " + String(battery_voltage, 3) + " V");
   
 
-  if(battery_voltage < 3.4 && battery_voltage > 0){
+  /* Set sleep duration and battery status based on voltage level */
+  if (battery_voltage > 4.0) {
+    time_to_sleep = 300;              // 5 min  - well charged
+  } else if (battery_voltage > 3.7) {
+    time_to_sleep = 600;              // 10 min - good
+  } else if (battery_voltage > 3.4) {
+    time_to_sleep = 1200;             // 20 min - low
+    battery_status = "Battery-Low";
+  } else {
+    time_to_sleep = 1800;             // 30 min - critical
     battery_status = "Battery-Low";
   }
+  LOG("Sleep: " + String(time_to_sleep) + "s");
 
   time_to_sleep = time_to_sleep * uS_TO_S_FACTOR;
     
